@@ -3,6 +3,7 @@ from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_score
 import numpy as np
+import mlflow
 
 def tune_hyperparameter(model:BaseEstimator,param_grid:dict,preprocessing_pipeline:Pipeline,X:np.ndarray,y:np.ndarray,n_trials:int=50,cpu:int=4) -> dict:
     '''
@@ -48,11 +49,19 @@ def tune_hyperparameter(model:BaseEstimator,param_grid:dict,preprocessing_pipeli
             ('model',model(**grid))
         ])
 
-        scores = cross_val_score(estimator,X,y,cv=5,n_jobs=cpu)
+        with mlflow.start_run(nested=True):
+            scores = cross_val_score(estimator,X,y,cv=5,n_jobs=cpu,scoring='recall')
+
+            mlflow.log_params(grid)
+            mlflow.log_metrics({
+                'recall_mean':scores.mean(),
+                'recall_std':scores.std()
+            })
         return scores.mean()
 
     study = optuna.create_study(direction='maximize')
     study.optimize(objective,n_trials=n_trials)
+        
     return study.best_params
 
 if __name__ == '__main__':
