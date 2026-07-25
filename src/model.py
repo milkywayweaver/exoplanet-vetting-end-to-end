@@ -54,8 +54,8 @@ def tune_hyperparameter(model:BaseEstimator,param_grid:dict,preprocessing_pipeli
 
             mlflow.log_params(grid)
             mlflow.log_metrics({
-                'recall_mean':scores.mean(),
-                'recall_std':scores.std()
+                'cv_recall_mean':scores.mean(),
+                'cv_recall_std':scores.std()
             })
         return scores.mean()
 
