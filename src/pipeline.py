@@ -1,13 +1,12 @@
-from data import read_data,clean_data,split_data
+from data import read_data,clean_data,split_data,validate_data
 from features import pl_features,pl_target
 from model import tune_hyperparameter
 from evaluate import evaluate_metrics,plot_confmat
 
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
-from sklearn.pipeline import Pipeline
+from sklearn.base import clone
 from sklearn.model_selection import cross_val_score
-from sklearn.decomposition import KernelPCA
 import mlflow
 
 file_path = '../data/raw/TOI_2026.07.23_10.15.02.csv'
@@ -20,6 +19,7 @@ CV_SCORING = 'recall'
 # DATA ========================================================
 print('Reading data...')
 raw = read_data(file_path=file_path)
+validate_data(raw)
 data = clean_data(raw)
 X_train,X_val,y_train,y_val = split_data(data,seed=SEED)
 
@@ -44,7 +44,9 @@ with mlflow.start_run(run_name=f'{RUN_NAME}_EXPERIMENT'):
     best_param = tune_hyperparameter(SVC,param_grid,pl_features,X_train,y_train,n_trials=N_TRIALS,scoring=CV_SCORING)
 
 # MODELLING
+print('Modelling with the best hyperparameter...')
 mlflow.set_experiment('TESS Planetary Candidate Models')
+pl_complete = clone(pl_features)
 pl_complete.steps.append(('model',SVC()))
 pl_complete.set_params(**best_param)
 pl_complete.fit(X_train,y_train)

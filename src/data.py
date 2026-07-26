@@ -84,6 +84,7 @@ def validate_data(data:pd.DataFrame):
     Return:
         None
     '''
+    print(f'Starting data validation...')
     # Input checks
     raw_cols = ['rowid', 'toi', 'toipfx', 'tid', 'ctoi_alias', 'pl_pnum', 'tfopwg_disp',
        'rastr', 'ra', 'decstr', 'dec', 'st_pmra', 'st_pmdec', 'pl_tranmid',
@@ -208,8 +209,8 @@ def validate_data(data:pd.DataFrame):
     )
 
     results = validation_definition.run(batch_parameters={'dataframe':data})
-    print(results.success)
-    print(results.statistics)
+    print(f'Data validation success: {results.success}.')
+    print(f'Statistics: {results.success}')
 
     if not results.success:
         print('EXPECTATIONS ARE NOT MET')

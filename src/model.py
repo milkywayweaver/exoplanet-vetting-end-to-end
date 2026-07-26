@@ -1,5 +1,5 @@
 import optuna
-from sklearn.base import BaseEstimator
+from sklearn.base import BaseEstimator,clone
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import cross_val_score
 from sklearn.decomposition import KernelPCA
@@ -46,12 +46,13 @@ def tune_hyperparameter(model:BaseEstimator,param_grid:dict,preprocessing_pipeli
                     grid[key] = trial.suggest_int(key,value[1],value[2])
                 case 'cat':
                     grid[key] = trial.suggest_categorical(key,value[1])
-        
-        preprocessing_pipeline.steps.append(('model',model()))
-        preprocessing_pipeline.set_params(**grid)
+
+        pl = clone(preprocessing_pipeline)
+        pl.steps.append(('model',model()))
+        pl.set_params(**grid)
 
         with mlflow.start_run(nested=True):
-            scores = cross_val_score(preprocessing_pipeline,X,y,cv=5,n_jobs=cpu,scoring=scoring)
+            scores = cross_val_score(pl,X,y,cv=5,n_jobs=cpu,scoring=scoring)
 
             mlflow.log_params(grid)
             mlflow.log_metrics({
