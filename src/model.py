@@ -37,9 +37,6 @@ def tune_hyperparameter(model:BaseEstimator,param_grid:dict,preprocessing_pipeli
         cpu (int, default=4): Number of CPU to be used.
     '''
     def objective(trial):
-        pca_grid = {
-                    'kernel': trial.suggest_categorical('pca_kernel',['linear','poly','rbf'])
-                }
         grid = {}
         for key,value in param_grid.items():
             match value[0]:
@@ -50,17 +47,13 @@ def tune_hyperparameter(model:BaseEstimator,param_grid:dict,preprocessing_pipeli
                 case 'cat':
                     grid[key] = trial.suggest_categorical(key,value[1])
         
-        estimator = Pipeline([
-            ('preprocessing',preprocessing_pipeline),
-            ('pca',KernelPCA(**pca_grid)),
-            ('model',model(**grid))
-        ])
+        preprocessing_pipeline.steps.append(('model',model()))
+        preprocessing_pipeline.set_params(**grid)
 
         with mlflow.start_run(nested=True):
-            scores = cross_val_score(estimator,X,y,cv=5,n_jobs=cpu,scoring=scoring)
+            scores = cross_val_score(preprocessing_pipeline,X,y,cv=5,n_jobs=cpu,scoring=scoring)
 
             mlflow.log_params(grid)
-            mlflow.log_param('pca_kernel',pca_grid['kernel'])
             mlflow.log_metrics({
                 'cv_recall_mean':scores.mean(),
                 'cv_recall_std':scores.std()

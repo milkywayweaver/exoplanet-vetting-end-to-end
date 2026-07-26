@@ -14,7 +14,8 @@ file_path = '../data/raw/TOI_2026.07.23_10.15.02.csv'
 
 SEED = 42
 RUN_NAME = 'SVC'
-N_TRIALS = 1
+N_TRIALS = 20
+CV_SCORING = 'recall'
 
 # DATA ========================================================
 print('Reading data...')
@@ -31,37 +32,30 @@ cats = pl_target.named_steps['encoder'].categories[0]
 # HYPERPARAMETER TUNING
 print('Starting hyperparameter tuning...')
 param_grid = {
-        'C': ['float',1e-2,1e1],
-        'kernel':['cat',['linear','poly','rbf'],None],
-        'degree':['int',2,4],
-        'gamma':['cat',['scale'],None]
+    'pca__kernel':['linear','poly','rbf'],
+    'model__C': ['float',1e-2,1e1],
+    'model__kernel':['cat',['linear','poly','rbf'],None],
+    'model__degree':['int',2,4],
+    'model__gamma':['cat',['scale'],None]
     }
 mlflow.set_tracking_uri("http://127.0.0.1:5000")
 mlflow.set_experiment('TESS Planetary Candidate Experiments')
 with mlflow.start_run(run_name=f'{RUN_NAME}_EXPERIMENT'):
-    best_param = tune_hyperparameter(SVC,param_grid,pl_features,X_train,y_train,n_trials=N_TRIALS,scoring='f1')
-    # print(best_param)
-    # print(best_param['pca_kernel'])
-    # print(best_param.pop('pca_kernel'))
-    pca_kernel = best_param.pop('pca_kernel')
-    print(type(pca_kernel))
+    best_param = tune_hyperparameter(SVC,param_grid,pl_features,X_train,y_train,n_trials=N_TRIALS,scoring=CV_SCORING)
 
-mlflow.set_experiment('TESS Planetary Candidate Models')
 # MODELLING
-pl_complete = Pipeline([
-    ('preprocessing',pl_features),
-    ('pca',KernelPCA(kernel=pca_kernel)),
-    ('model',SVC(**best_param))
-])
+mlflow.set_experiment('TESS Planetary Candidate Models')
+pl_complete.steps.append(('model',SVC()))
+pl_complete.set_params(**best_param)
 pl_complete.fit(X_train,y_train)
 preds_val = pl_complete.predict(X_val)
-metrics_val = evaluate_metrics(y_val,preds_val,binary=True)
 
-fig = plt.figure(figsize=(6,5))
-plot_confmat(y_val,preds_val,cats[:2])
-plt.close()
 with mlflow.start_run(run_name=f'{RUN_NAME}_MODEL'):
-    scores = cross_val_score(pl_complete,X_train,y_train,cv=5,n_jobs=4,scoring='recall')
+    scores = cross_val_score(pl_complete,X_train,y_train,cv=5,n_jobs=4,scoring=CV_SCORING)
+    metrics_val = evaluate_metrics(y_val,preds_val,binary=True)
+    fig = plt.figure(figsize=(6,5))
+    plot_confmat(y_val,preds_val,cats[:2])
+    plt.close()
 
     mlflow.log_params(best_param)
     mlflow.log_metrics({
