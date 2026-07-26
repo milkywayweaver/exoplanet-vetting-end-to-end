@@ -14,7 +14,7 @@ file_path = '../data/raw/TOI_2026.07.23_10.15.02.csv'
 SEED = 42
 RUN_NAME = 'SVC'
 N_TRIALS = 20
-CV_SCORING = 'recall'
+CV_SCORING = 'precision'
 
 # DATA ========================================================
 print('Reading data...')
@@ -65,8 +65,10 @@ with mlflow.start_run(run_name=f'{RUN_NAME}_MODEL'):
         'cv_recall_std':scores.std()
     })
     mlflow.log_metrics(metrics_val)
-    mlflow.sklearn.log_model(pl_complete,
-                                name='model',
-                                serialization_format='skops',
-                                skops_trusted_types=['modules.aslt.ASLT'])
+    mlflow.sklearn.log_model(
+        pl_complete,
+        name='model',
+        serialization_format='skops',
+        skops_trusted_types=['modules.aslt.ASLT']
+        )
     mlflow.log_figure(fig,'confmat.png')
