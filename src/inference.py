@@ -1,11 +1,9 @@
 import pandas as pd
 import mlflow
-from modules.aslt import ASLT
-from features import pl_target
-from data import read_data,validate_data,clean_data
+from data import validate_data,clean_data
 
+''' THE MODEL SHOULD LIVE INSIDE OF THE FASTAPI APP, NOT IN A SEPARATE SCRIPT'''
 MODEL_URI = 'models:/TESS Planetary Candidate Model/2'
-
 mlflow.set_tracking_uri("http://127.0.0.1:5000")
 model = mlflow.pyfunc.load_model(
     model_uri=MODEL_URI,

@@ -2,6 +2,7 @@ from data import read_data,clean_data,split_data,validate_data
 from features import pl_features,pl_target
 from model import tune_hyperparameter
 from evaluate import evaluate_metrics,plot_confmat
+from modules.outlier import OutlierRemoval
 
 import matplotlib.pyplot as plt
 from sklearn.svm import SVC
@@ -24,6 +25,11 @@ data = clean_data(raw)
 X_train,X_val,y_train,y_val = split_data(data,seed=SEED)
 
 # PREPROCESSING
+print('Removing outliers...')
+outlier = OutlierRemoval(3,print_detail=True)
+X_train,y_train = outlier.fit_transform((X_train,y_train))
+
+print('Encoding targets...')
 y_train, y_val = y_train.to_numpy(), y_val.to_numpy()
 y_train = pl_target.fit_transform(y_train.reshape(-1,1)).flatten()
 y_val = pl_target.transform(y_val.reshape(-1,1)).flatten()
