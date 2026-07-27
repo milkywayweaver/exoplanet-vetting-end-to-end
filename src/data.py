@@ -55,7 +55,7 @@ def clean_data(data) -> pd.DataFrame:
     df['disp'] = df['disp'].map(disp_map)
     return df
 
-def split_data(data,seed=42):
+def split_data(data,seed=42) -> tuple:
     '''
     Splits the cleaned TESS table into training and validation set.
     Only processes rows with disposition group of "F" and "C".
