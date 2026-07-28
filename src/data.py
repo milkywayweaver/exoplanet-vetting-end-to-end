@@ -18,7 +18,7 @@ def read_data(file_path:str) -> pd.DataFrame:
     data = pd.read_csv(file_path,skiprows=30)
     return data
 
-def clean_data(data) -> pd.DataFrame:
+def clean_data(data:pd.DataFrame) -> pd.DataFrame:
     '''
     Clean raw TESS table read from read_data function.
     Data cleaning includes:

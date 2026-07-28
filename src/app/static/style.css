@@ -50,7 +50,7 @@ header > * {
     font-size: 6rem;
 }
 #section-main {
-    margin:0 3rem 0 3rem;
+    margin:2rem 3rem 0 3rem;
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(16rem,1fr));
     gap: 5%;
@@ -70,7 +70,8 @@ header > * {
     box-sizing: border-box;
     min-width: 16rem;
     width: 100%;
-    padding: 1rem;
+    padding: 0 1rem;
+    margin-bottom: 1rem; 
 }
 .input-container > div {
     display: flex;
@@ -78,6 +79,7 @@ header > * {
     gap: 0;
     width: 100%;
     padding: 0;
+    margin: 0;
 }
 .input-container > div > * {
     margin: 0;
@@ -93,6 +95,13 @@ input[type='number'] {
     outline: none;
     border: none;
     -moz-appearance: textfield;
+}
+input[type='number']:hover {
+    background-color: var(--bg3);
+}
+input[type='number']:focus {
+    outline: var(--orange1) 1px solid;
+    background-color: var(--bg3);
 }
 input[type='number']::-webkit-inner-spin-button,input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -111,6 +120,30 @@ input[type='number']::placeholder {
 #planet {
     color: var(--blue);
 }
+#submit {
+    margin: 1rem 0;
+}
+#submit-btn {
+    border-radius: 5px;
+    padding: 0.3rem 1rem;
+    background-color: var(--orange1);
+    color: var(--bg);
+    border: none;
+    outline: none;
+
+    display: flex;
+    align-items: center;
+    
+    font-family: 'Michroma';
+}
+#submit-btn:hover {
+    background-color: var(--orange);
+}
+#submit-icon {
+    margin-right: 0.2rem;
+    font-size: medium;
+}
+
 hr {
     border: none;
     outline: var(--bg2) 1px solid;
@@ -122,7 +155,7 @@ hr {
     height: 100%;
     background-color: var(--bg1);
     border-radius: 10px;
-    border: var(--orange1) 1px solid;
+    border: var(--bg3) 1px solid;
     padding: 2rem; 
 }
 #subsection-result > div > * {

@@ -5,16 +5,16 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Unica+One&family=Zen+Dots&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
         <header>
             <span class="material-symbols-outlined" id="logo">planet</span>
             <h1>TESS Candidate Vetting</h1>
         </header>
+        <hr>
         <section id="section-main">
             <section id="subsection-param">
-                <hr>
                 <div id="pos" class="input-container">
                     
                 </div>
@@ -26,8 +26,11 @@
                 <div id="planet" class="input-container">
                     
                 </div>
+                <hr>
                 <div id="submit">
-                    <button id="submit-btn">Submit</button>
+                    <button id="submit-btn">
+                        Submit<span class="material-symbols-outlined" id="submit-icon">arrow_outward</span>
+                    </button>
                 </div>
                 <hr>
             </section>
@@ -38,6 +41,6 @@
                 </div>
             </section>
         </section>
-        <script src="index.js" defer></script>
+        <script src="/static/index.js" defer></script>
     </body>
 </html>
