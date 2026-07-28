@@ -1,104 +1,118 @@
-const inputFieldsEl = document.querySelector('#input-fields')
-
 const neededParams = {
     ra: {
         display: 'RA',
         minValue: 0,
         maxValue: 360,
-        value: 0
+        value: 0,
+        type: 'pos'
     },
     dec: {
         display: 'Declination',
         minValue: -90,
         maxValue: 90,
-        value: 0
+        value: 0,
+        type: 'pos'
     },
     st_pmra: {
         display: 'Stellar PM RA',
         minValue: null,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'pos'
     },
     st_pmdec: {
         display: 'Stellar PM Dec',
         minValue: null,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'pos'
     },
     st_tmag: {
         display: 'Stellar Magnitude',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'stellar'
     },
     st_dist: {
         display: 'Stellar Distance',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'stellar'
     },
     st_teff: {
         display: 'Stellar Effective Temperature',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'stellar'
     },
     st_logg: {
         display: 'Stellar log(g)',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'stellar'
     },
     st_rad: {
         display: 'Stellar Radius',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'stellar'
     },
     pl_tranmid: {
         display: 'Planetary Transit Midpoint',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'planet'
     },
     pl_orbper: {
         display: 'Planetary Orbital Period',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'planet'
     },
     pl_trandurh: {
         display: 'Planetary Transit Duration',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'planet'
     },
     pl_trandep: {
         display: 'Planetary Transit Depth',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'planet'
     },
     pl_rade: {
         display: 'Planetary Radius',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'planet'
     },
     pl_insol: {
         display: 'Planetary Insolation',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'planet'
     },
     pl_eqt: {
         display: 'Planetary Equillibrium Temperature',
         minValue: 0,
         maxValue: null,
-        value: 0
+        value: 0,
+        type: 'planet'
     }
 }
-
+ 
 for (const [key,value] of Object.entries(neededParams)) {
     const divEl = document.createElement('div')
     divEl.classList.add('input-container')
@@ -138,5 +152,6 @@ for (const [key,value] of Object.entries(neededParams)) {
     
     divEl.appendChild(inputTitleEl)
     divEl.appendChild(inputFieldEl)
-    inputFieldsEl.appendChild(divEl)
+    inputTypeEl = document.querySelector(`#${value.type}`)
+    inputTypeEl.appendChild(divEl)
 }
