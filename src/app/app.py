@@ -38,11 +38,12 @@ class TESSData(BaseModel):
     
 app = FastAPI()
 
-app.mount('/static',StaticFiles(directory='static'),name='static')
+APP_PATH = Path(__file__).resolve().parent
+app.mount('/static',StaticFiles(directory=APP_PATH/'static'),name='static')
 
 @app.get('/',response_class=FileResponse)
 async def index():
-    return FileResponse('index.html')
+    return FileResponse(APP_PATH/'index.html')
 
 @app.post('/data/',status_code=201)
 async def receive_data(data:TESSData):
