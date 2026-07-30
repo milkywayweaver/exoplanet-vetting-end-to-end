@@ -9,12 +9,14 @@ from sklearn.svm import SVC
 from sklearn.base import clone
 from sklearn.model_selection import cross_val_score
 import mlflow
+from pathlib import Path
 
-file_path = '../data/raw/TOI_2026.07.23_10.15.02.csv'
+ROOT = Path(__file__).resolve().parent.parent
+file_path = str(ROOT / 'data/raw/TOI_2026.07.23_10.15.02.csv')
 
 SEED = 42
 RUN_NAME = 'SVC'
-N_TRIALS = 20
+N_TRIALS = 2
 CV_SCORING = 'precision'
 
 # DATA ========================================================
@@ -44,7 +46,7 @@ param_grid = {
     'model__degree':['int',2,4],
     'model__gamma':['cat',['scale'],None]
     }
-mlflow.set_tracking_uri("http://127.0.0.1:5000")
+mlflow.set_tracking_uri(f'sqlite:///{ROOT/'mlflow.db'}')
 mlflow.set_experiment('TESS Planetary Candidate Experiments')
 with mlflow.start_run(run_name=f'{RUN_NAME}_EXPERIMENT'):
     best_param = tune_hyperparameter(SVC,param_grid,pl_features,X_train,y_train,n_trials=N_TRIALS,scoring=CV_SCORING)
@@ -75,6 +77,7 @@ with mlflow.start_run(run_name=f'{RUN_NAME}_MODEL'):
         pl_complete,
         name='model',
         serialization_format='skops',
-        skops_trusted_types=['modules.aslt.ASLT']
+        skops_trusted_types=['modules.aslt.ASLT'],
+        pip_requirements=[]
         )
     mlflow.log_figure(fig,'confmat.png')
