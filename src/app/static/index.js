@@ -168,7 +168,7 @@ submitBtn.addEventListener('click', async function() {
     console.log('This is the result: ',pred)
 
     const predEl = document.querySelector('#pred-result')
-    const predLabel = (pred == 1) ? 'Likely to be an planet' : 'Not likely to be an planet' 
+    const predLabel = (pred == 1) ? 'Likely to be a planet' : 'Not likely to be a planet' 
     predEl.textContent = predLabel
 })
 

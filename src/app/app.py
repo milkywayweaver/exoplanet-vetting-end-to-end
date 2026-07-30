@@ -6,15 +6,14 @@ from pydantic import BaseModel
 import sys
 from pathlib import Path
 
-script_dir = Path(__file__).resolve().parent.parent
-sys.path.append(str(script_dir))
+SCRIPT_DIR = Path(__file__).resolve().parent.parent
+sys.path.append(str(SCRIPT_DIR))
 from inference import predict
 
 import mlflow
-MODEL_URI = 'models:/TESS Planetary Candidate Model/2'
-mlflow.set_tracking_uri("http://127.0.0.1:5000")
+MODEL_URI = SCRIPT_DIR/'artifacts/'
 model = mlflow.pyfunc.load_model(
-    model_uri=MODEL_URI,
+    model_uri=str(MODEL_URI),
     model_config={'skops_trusted_types':['modules.aslt.ASLT']}
 )
 
@@ -38,11 +37,12 @@ class TESSData(BaseModel):
     
 app = FastAPI()
 
-app.mount('/static',StaticFiles(directory='static'),name='static')
+APP_DIR = Path(__file__).resolve().parent
+app.mount('/static',StaticFiles(directory=APP_DIR/'static'),name='static')
 
 @app.get('/',response_class=FileResponse)
 async def index():
-    return FileResponse('index.html')
+    return FileResponse(APP_DIR/'index.html')
 
 @app.post('/data/',status_code=201)
 async def receive_data(data:TESSData):
