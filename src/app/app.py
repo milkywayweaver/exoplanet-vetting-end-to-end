@@ -13,7 +13,7 @@ from inference import predict
 import mlflow
 MODEL_URI = SCRIPT_DIR/'artifacts/'
 model = mlflow.pyfunc.load_model(
-    model_uri=MODEL_URI,
+    model_uri=str(MODEL_URI),
     model_config={'skops_trusted_types':['modules.aslt.ASLT']}
 )
 

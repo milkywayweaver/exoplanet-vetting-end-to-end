@@ -1,0 +1,11 @@
+.env
+.venv/
+.vscode
+__pycache__/
+mlartifacts/
+mlruns/
+mlflow.db
+outlier-state-dict.json
+.git
+.gitignore
+.gitattributes
