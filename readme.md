@@ -1,1 +1,9 @@
 # End to End Machine Learning Project: Classifying TESS Planetary Candidate as Confirmed or False Detection
+
+Exoplanets are planets that orbit stars other than the Sun. Transiting Exoplanet Survey Satellite, also known as TESS, surveys the sky in order to find these exoplanet candidates. However, not every candidate turns out to be real exoplanets. Some are binary stars, instrumental noise, and other things. This project aims to classify unconfirmed planetary candidates (PC) into either confirmed (C) or false detection (F).
+
+### Objective
+This project is aimed more towards creating an end-to-end machine learning pipeline rather than optimizing the machine learning model. Therefore, only one model will be tested. The chosen model is SVM optimized using Optuna to find the optimal hyperparameter. The rest of the project is focused more on building the pipeline in modular Python scripts, tracking performance with MLFlow, and deployment.
+
+### Data
+The data used in this project is the TESS Project Candidates table available publicly on the NASA Exoplanet Archive site. It consists of several statistical parameters of the host star and the orbiting object, such as stellar radius and transit depth. The `tfopwg_disp` (TESS Follow-up Observing Program Working Group disposition) column will be used as the true label of the data. Initially, there are 6 labels including ambiguous planetary candidate (APC), planetary candidate (PC), false alarm (FA), false positive (FP), known planet (KP), and confirmed planet (CP). These labels would be grouped into three labels of false detection (F, includes FA and FP), confirmed (C, includes CP and KP), and unconfirmed planetary candidate (PC, includes PC and APC). The F and C data will be split into training and validation data. Then the PC data will be classified into F or C by the trained model.
